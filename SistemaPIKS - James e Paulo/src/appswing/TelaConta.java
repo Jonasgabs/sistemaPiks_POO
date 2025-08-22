@@ -171,7 +171,7 @@ public class TelaConta {
 					String nome = textField_2.getText();
 
 					if (!nome.matches("^[a-zA-Z\s]+$"))
-						throw new Exception("nome deve ter letras e espaços!");
+						throw new Exception("nome deve ter letras e espaï¿½os!");
 
 					if (chave.isEmpty())
 						throw new Exception("chave nao pode ser vazia!");
@@ -237,7 +237,7 @@ public class TelaConta {
 						throw new Exception("chave " + chave + " nao existe!");
 
 					if(conta.getSaldo() != 0) 
-						throw new Exception("Conta com saldo não pode ser apagada ");
+						throw new Exception("Conta com saldo nÃ£o pode ser apagada ");
 
 					Cliente cli = conta.getCliente();
 					cli.setConta(null); // desvincula cliente
@@ -271,7 +271,7 @@ public class TelaConta {
 						throw new Exception("Chave inexistente: " + chave);
 
 					if (!(conta instanceof ContaEspecial))
-						throw new Exception("Conta não é especial, não tem limite!");
+						throw new Exception("Conta nÃ£o Ã© especial, nÃ£o tem limite!");
 
 					String resposta = JOptionPane.showInputDialog(frame, "novo limite da conta");
 					if (resposta == null || resposta.isEmpty())

@@ -19,36 +19,44 @@ import modelo.ContaEspecial;
 import modelo.Lancamento;
 
 public class Repositorio {
-	private TreeMap<String, Conta> contasPIKS = new TreeMap();
-	private TreeMap<Integer, Cliente> clientesCPF = new TreeMap();
+	private static TreeMap<String, Conta> contasPIKS = new TreeMap<String, Conta>();
+	private static TreeMap<Integer, Cliente> clientesCPF = new TreeMap<Integer, Cliente>();
 	
 	static {
 		lerObjetos();
 	}
 
 	public static void adicionarConta(Conta c) {
-		this.
+		contasPIKS.put(c.getChavePiks(), c);
 	}
 
 	public static void removerConta(Conta c) {
+		contasPIKS.remove(c.getChavePiks());
+		
 	}
 
 	public static Conta localizarConta(String chave) {
+		return contasPIKS.get(chave);
 	}
 
 	public static void adicionarCliente(Cliente c) {
+		clientesCPF.put(c.getCpf(), c);
 	}
 
 	public static void removerCliente(Cliente c) {
+		clientesCPF.remove(c.getCpf());
 	}
 
 	public static Cliente localizarCliente(int cpf) {
+		return clientesCPF.get(cpf);
 	}
 
 	public static ArrayList<Conta> getContas() {
+		return new ArrayList<>(contasPIKS.values());
 	}
 
 	public static ArrayList<Cliente> getClientes() {
+		return new ArrayList<>(clientesCPF.values());
 	}
 
 	public static void lerObjetos() {
@@ -130,7 +138,7 @@ public class Repositorio {
 	}
 
 	public static void gravarObjetos() {
-		// gravar nos arquivos csv os objetos que est�o no reposit�rio
+		// gravar nos arquivos csv os objetos que estão no reposit�rio
 		try {
 			File f1 = new File(new File(".\\contasPIKS.csv").getCanonicalPath());
 			FileWriter arqconta = new FileWriter(f1);
@@ -139,28 +147,32 @@ public class Repositorio {
 			String linha;
 			Double limite;
 			System.out.println("Repositorio - gravando objetos...");
-			for (Conta cta : contasPIKS.values()) {
-				if (cta instanceof ContaEspecial esp)
-					limite = esp.getLimite();
-				else
-					limite = 0.0;
-				linha = cta.getId()+ ";" + cta.getChavePiks() + ";" + cta.getSaldo() + ";" + limite + ";" +
-						cta.getCliente().getCpf() + ";"	+ cta.getCliente().getNome();
-				arqconta.write(linha + "\n");
-				// System.out.println("linha="+linha);
+			try {
+				for (Conta cta : contasPIKS.values()) {
+					if (cta instanceof ContaEspecial esp)
+						limite = esp.getLimite();
+					else
+						limite = 0.0;
+					linha = cta.getId()+ ";" + cta.getChavePiks() + ";" + cta.getSaldo() + ";" + limite + ";" +
+							cta.getCliente().getCpf() + ";"	+ cta.getCliente().getNome();
+					arqconta.write(linha + "\n");
+					// System.out.println("linha="+linha);
 
-				if (!cta.getLancamentos().isEmpty())
-					for (Lancamento lan : cta.getLancamentos()) {
-						String s = lan.getDatahora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-						arqlan.write(cta.getChavePiks()+";" +s+ ";"+ lan.getValor()+";"+lan.getTipo() +"\n");
-					}
-				
+					if (!cta.getLancamentos().isEmpty())
+						for (Lancamento lan : cta.getLancamentos()) {
+							String s = lan.getDatahora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+							arqlan.write(cta.getChavePiks()+";" +s+ ";"+ lan.getValor()+";"+lan.getTipo() +"\n");
+						}
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			arqconta.close();
 			arqlan.close();
 			
 		} catch (Exception e) {
-			throw new RuntimeException("problema na cria��o do arquivo  contasPIKS " + e.getMessage());
+			throw new RuntimeException("problema na criação do arquivo  contasPIKS " + e.getMessage());
 		}
 
 	}

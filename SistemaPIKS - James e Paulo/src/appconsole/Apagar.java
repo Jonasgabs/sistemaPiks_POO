@@ -11,10 +11,10 @@ public class Apagar {
 			String chave = "chave3";
 			Conta conta = Repositorio.localizarConta(chave);
 			if (conta == null) 
-				throw new Exception(chave+" não encontrada");
+				throw new Exception(chave+" nï¿½o encontrada");
 			
 			if(conta.getSaldo() != 0) 
-				throw new Exception("Conta com saldo não pode ser apagada ");
+				throw new Exception("Conta com saldo nÃ£o pode ser apagada ");
 			
 			Cliente cliente = conta.getCliente();
 			conta.setCliente(null);
